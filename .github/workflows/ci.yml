@@ -1,0 +1,16 @@
+name: Selenium Java Test
+on: [push]
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+      - name: Install ChromeDriver dependencies
+        run: sudo apt-get update && sudo apt-get install -y chromium-driver
+      - name: Run tests
+        run: cd tests && mvn test

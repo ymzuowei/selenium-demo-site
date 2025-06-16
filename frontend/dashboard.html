@@ -1,0 +1,7 @@
+<!DOCTYPE html><html><head><title>Dashboard</title></head><body>
+  <h1 id="welcome"></h1>
+  <script>
+    document.getElementById('welcome').innerText = 'Welcome ' +
+      (document.cookie.includes('auth=1') ? 'demo user' : 'guest');
+  </script>
+</body></html>
