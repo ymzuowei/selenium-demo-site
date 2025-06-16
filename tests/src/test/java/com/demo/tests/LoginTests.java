@@ -9,7 +9,7 @@ import org.junit.jupiter.api.BeforeEach;
 public class LoginTests extends BaseTest {
     @BeforeEach
     public void loadFormPage() {
-        driver.get("http://localhost:8080/forms/form.html");
+        driver.get("http://localhost:8080/login.html");
     }
 
     @Test
@@ -17,9 +17,6 @@ public class LoginTests extends BaseTest {
         driver.findElement(By.id("email")).sendKeys("eve.holt@reqres.in");
         driver.findElement(By.id("password")).sendKeys("cityslicka");
         driver.findElement(By.cssSelector("button[type='submit']")).click();
-
-        // Wait for login success message - simple wait loop, or better with WebDriverWait
-        Thread.sleep(3000);  // replace with WebDriverWait if preferred
 
         String msg = wait.until(d -> {
             String text = d.findElement(By.id("msg")).getText();
@@ -39,6 +36,7 @@ public class LoginTests extends BaseTest {
         driver.findElement(By.id("email")).sendKeys("wrong@example.com");
         driver.findElement(By.id("password")).sendKeys("invalidpass");
         driver.findElement(By.cssSelector("button[type='submit']")).click();
+
         String error = wait.until(d -> {
             String text = d.findElement(By.id("error")).getText();
             return text.equals("Login successful!") ? text : null;
