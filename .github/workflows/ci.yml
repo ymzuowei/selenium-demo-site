@@ -5,6 +5,16 @@ on: [push]
 jobs:
   test:
     runs-on: ubuntu-latest
+    services:
+      demo-site:
+        image: demo-site
+        ports:
+          - 8080:80
+        options: >-
+          --health-cmd "curl --fail http://localhost:8080/login.html || exit 1"
+          --health-interval 5s
+          --health-timeout 3s
+          --health-retries 10
 
     steps:
       - name: Checkout code
@@ -15,6 +25,23 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '17'
+
+      - name: Build frontend Docker image
+        run: docker build -t demo-site frontend
+
+      - name: Run frontend container
+        run: docker run -d -p 8080:80 --name demo-site demo-site
+
+      - name: Wait for frontend to become healthy
+        run: |
+          for i in {1..30}; do
+            if curl --fail http://localhost:8080/login.html; then
+              echo "Frontend is up."
+              break
+            fi
+            echo "Waiting for frontend..."
+            sleep 2
+          done
 
       - name: Install Google Chrome
         run: |
