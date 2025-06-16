@@ -1,9 +1,34 @@
-<!DOCTYPE html><html><head><title>Form Test</title><meta name="viewport" content="width=device-width, initial-scale=1">
-<script src="../js/form.js"></script></head>
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Form Test</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script src="../js/form.js"></script>
+</head>
 <body>
   <form id="regForm">
-    <input name="email" id="email" placeholder="Email"><span id="emailErr" style="color:red"></span><br>
-    <input name="phone" id="phone" placeholder="Phone"><span id="phoneErr" style="color:red"></span><br>
-    <button type="submit">Submit</button><p id="msg" style="color:green"></p>
+    <input name="email" id="email" placeholder="Email">
+    <span id="emailErr" style="color:red"></span><br>
+
+    <input name="phone" id="phone" placeholder="Phone">
+    <span id="phoneErr" style="color:red"></span><br>
+
+    <select id="country">
+      <option value="">-- Select Country --</option>
+      <option value="us">United States</option>
+      <option value="cn">China</option>
+    </select>
+    <span id="countryErr" style="color:red"></span><br>
+
+    <input type="checkbox" id="agree"> I agree to terms
+    <span id="agreeErr" style="color:red"></span><br>
+
+    <input type="radio" name="gender" value="male"> Male
+    <input type="radio" name="gender" value="female"> Female
+    <span id="genderErr" style="color:red"></span><br>
+
+    <button type="submit">Submit</button>
+    <p id="msg" style="color:green"></p>
   </form>
-</body></html>
+</body>
+</html>

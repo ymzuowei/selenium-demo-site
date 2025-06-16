@@ -3,9 +3,11 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.openqa.selenium.WebDriver;
 public class BaseTest {
   protected WebDriver driver;
+  protected WebDriverWait wait;
   @BeforeEach public void setUp(){
     ChromeOptions options = new ChromeOptions();
     // Run Chrome headless in CI
