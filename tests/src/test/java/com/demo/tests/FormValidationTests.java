@@ -8,6 +8,11 @@ import org.openqa.selenium.support.ui.Select;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class FormValidationTests extends BaseTest {
+    @BeforeEach
+    public void loadFormPage() {
+        driver.get("http://localhost:8080/forms/form.html");
+    }
+
     @Test
     public void testValidSubmission() {
         driver.findElement(By.id("email")).sendKeys("test@example.com");
