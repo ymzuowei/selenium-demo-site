@@ -95,29 +95,34 @@ public class FormValidationTests extends BaseTest {
 
     @Test
     public void testEmailUniquenessCheck() {
+        driver.findElement(By.id("email")).clear();
         driver.findElement(By.id("email")).sendKeys("taken@example.com");
 
         // Trigger onblur by focusing on another field
         driver.findElement(By.id("phone")).click();
 
-        // Wait for async check
-        String result = wait.until(d ->
-            d.findElement(By.id("emailUniqueMsg")).getText()
-        );
+        String emailStatus = wait.until(d -> {
+            String text = d.findElement(By.id("emailStatus")).getText();
+            return text.equals("Email already registered") ? text : null;
+        });
 
-        assertEquals("Email already registered", result);
+        assertEquals("Email already registered", emailStatus);
     }
 
     @Test
     public void testEmailAvailableCheck() {
-        driver.findElement(By.id("email")).sendKeys("free@example.com");
+        driver.findElement(By.id("email")).clear();
+        driver.findElement(By.id("email")).sendKeys("newuser@example.com");
+
+        // Trigger onblur by focusing on another field
         driver.findElement(By.id("phone")).click();
 
-        String result = wait.until(d ->
-            d.findElement(By.id("emailUniqueMsg")).getText()
-        );
+        String emailStatus = wait.until(d -> {
+            String text = d.findElement(By.id("emailStatus")).getText();
+            return text.equals("Email available") ? text : null;
+        });
 
-        assertEquals("Email available", result);
+        assertEquals("Email available", emailStatus);
     }
 
 }
