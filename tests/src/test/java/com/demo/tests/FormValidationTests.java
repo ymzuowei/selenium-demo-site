@@ -92,4 +92,37 @@ public class FormValidationTests extends BaseTest {
         String genderError = driver.findElement(By.id("genderErr")).getText();
         assertEquals("Select a gender", genderError);
     }
+
+    @Test
+    public void testEmailUniquenessCheck() {
+        driver.findElement(By.id("email")).clear();
+        driver.findElement(By.id("email")).sendKeys("taken@example.com");
+
+        // Trigger onblur by focusing on another field
+        driver.findElement(By.id("phone")).click();
+
+        String emailStatus = wait.until(d -> {
+            String text = d.findElement(By.id("emailStatus")).getText();
+            return text.equals("Email already registered") ? text : null;
+        });
+
+        assertEquals("Email already registered", emailStatus);
+    }
+
+    @Test
+    public void testEmailAvailableCheck() {
+        driver.findElement(By.id("email")).clear();
+        driver.findElement(By.id("email")).sendKeys("newuser@example.com");
+
+        // Trigger onblur by focusing on another field
+        driver.findElement(By.id("phone")).click();
+
+        String emailStatus = wait.until(d -> {
+            String text = d.findElement(By.id("emailStatus")).getText();
+            return text.equals("Email available") ? text : null;
+        });
+
+        assertEquals("Email available", emailStatus);
+    }
+
 }

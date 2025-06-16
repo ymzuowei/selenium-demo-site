@@ -7,8 +7,9 @@
 </head>
 <body>
   <form id="regForm">
-    <input name="email" id="email" placeholder="Email">
+    <input name="email" id="email" placeholder="Email" onblur="checkEmailUnique()">
     <span id="emailErr" style="color:red"></span><br>
+    <span id="emailStatus" style="color:blue"></span>
 
     <input name="phone" id="phone" placeholder="Phone">
     <span id="phoneErr" style="color:red"></span><br>

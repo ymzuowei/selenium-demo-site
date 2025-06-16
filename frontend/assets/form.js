@@ -58,3 +58,18 @@ let handleSubmit = function(e) {
     document.getElementById('msg').innerText = 'Submitted!';
   }
 };
+
+function checkEmailUnique() {
+  const email = document.getElementById("email").value;
+  const msgElem = document.getElementById("emailStatus");
+  msgElem.innerText = "Checking...";
+
+  // Simulate AJAX call
+  setTimeout(() => {
+    if (email === "taken@example.com") {
+      msgElem.innerText = "Email already registered";
+    } else {
+      msgElem.innerText = "Email available";
+    }
+  }, 1500); // simulate network delay
+}
