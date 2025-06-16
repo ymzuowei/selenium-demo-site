@@ -61,7 +61,7 @@ let handleSubmit = function(e) {
 
 function checkEmailUnique() {
   const email = document.getElementById("email").value;
-  const msgElem = document.getElementById("emailUniqueMsg");
+  const msgElem = document.getElementById("emailStatus");
   msgElem.innerText = "Checking...";
 
   // Simulate AJAX call
