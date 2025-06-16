@@ -1,4 +1,11 @@
-document.getElementById('regForm').addEventListener('submit', function(e){
+document.addEventListener('DOMContentLoaded', function () {
+  const form = document.getElementById('regForm');
+  if (form) {
+    form.addEventListener('submit', handleSubmit);
+  }
+});
+
+let handleSubmit = function(e){
   e.preventDefault();
   let valid=true;
   const email=document.getElementById('email').value;
@@ -14,4 +21,4 @@ document.getElementById('regForm').addEventListener('submit', function(e){
   if(valid){
     document.getElementById('msg').innerText='Submitted!';
   }
-});
+};
