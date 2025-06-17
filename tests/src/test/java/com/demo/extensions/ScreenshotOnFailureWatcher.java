@@ -18,16 +18,14 @@ import java.time.format.DateTimeFormatter;
 
 public class ScreenshotOnFailureWatcher implements TestWatcher {
 
-    public ScreenshotOnFailureWatcher() {}
+    private final WebDriver driver;
 
-    private WebDriver getDriver() {
-        // Access WebDriver instance from BaseTest static getter
-        return BaseTest.getDriver();
+    public ScreenshotOnFailureWatcher(WebDriver driver) {
+        this.driver = driver;
     }
 
     @Override
     public void testFailed(ExtensionContext context, Throwable cause) {
-        WebDriver driver = getDriver();
         if (driver == null) {
             System.out.println("WebDriver is null, cannot take screenshot.");
             return;
