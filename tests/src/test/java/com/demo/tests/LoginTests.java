@@ -20,7 +20,7 @@ public class LoginTests extends BaseTest {
 
         String msg = wait.until(d -> {
             String text = d.findElement(By.id("msg")).getText();
-            return text.equals("Login successful!") ? text : null;
+            return (text != null && !text.trim().isEmpty()) ? text : null;
         });
 
         assertEquals("Login successful!", msg);
