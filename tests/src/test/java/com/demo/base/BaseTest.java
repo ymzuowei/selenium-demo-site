@@ -13,8 +13,8 @@ import java.nio.file.Path;
 import java.util.UUID;
 
 public class BaseTest {
-  protected WebDriver driver;
-  protected WebDriverWait wait;
+  protected static WebDriver driver;
+  protected static WebDriverWait wait;
   private Path tempUserDataDir; // store temp user data dir for cleanup
 
   @BeforeEach
@@ -55,7 +55,7 @@ public class BaseTest {
     }
   }
 
-  public WebDriver getDriver() {
+  public static WebDriver getDriver() {
     return driver;
   }
 }
