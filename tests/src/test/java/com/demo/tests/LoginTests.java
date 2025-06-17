@@ -39,7 +39,7 @@ public class LoginTests extends BaseTest {
 
         String error = wait.until(d -> {
             String text = d.findElement(By.id("error")).getText();
-            return text.equals("Login successful!") ? text : null;
+            return (text != null && !text.trim().isEmpty()) ? text : null;
         });
 
         assertTrue(error.contains("user not found") || error.contains("Login failed"));
