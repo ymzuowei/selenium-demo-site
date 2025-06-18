@@ -26,6 +26,7 @@ public class BaseTest {
     options.addArguments("--no-sandbox"); // Required in many CI environments
     options.addArguments("--disable-dev-shm-usage"); // Overcome limited /dev/shm space in containers
     options.addArguments("window-size=1280,960");
+    options.addArguments("--remote-debugging-port=0");
 
     // Create a unique temp directory for chrome user data to avoid session conflicts in parallel CI runs
     tempUserDataDir = Files.createTempDirectory("chrome-user-data-" + UUID.randomUUID());
