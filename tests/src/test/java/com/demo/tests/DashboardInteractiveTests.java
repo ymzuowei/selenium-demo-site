@@ -13,6 +13,8 @@ import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.time.Duration;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -52,16 +54,25 @@ public class DashboardInteractiveTests extends BaseTest {
 
     @Test
     @DisplayName("1. Sidebar should toggle and support responsive behavior")
-    public void testSidebarToggleAndResponsive() {
+    public void testSidebarToggleAndResponsive() throws Exception {
         WebDriver mobileDriver = null;
+        Path tempMobileUserDataDir = null;
         try {
-            // Create a separate ChromeDriver instance with 375x667 size
             ChromeOptions options = new ChromeOptions();
+            options.addArguments("--headless=new");
+            options.addArguments("--no-sandbox");
+            options.addArguments("--disable-dev-shm-usage");
             options.addArguments("window-size=375,667");
+            options.addArguments("--remote-debugging-port=0");
+
+            // Create unique temp profile for mobile driver
+            tempMobileUserDataDir = Files.createTempDirectory("chrome-mobile-user-data");
+            options.addArguments("--user-data-dir=" + tempMobileUserDataDir.toAbsolutePath());
+
             mobileDriver = new ChromeDriver(options);
             WebDriverWait mobileWait = new WebDriverWait(mobileDriver, Duration.ofSeconds(10));
 
-            // Perform login using the mobile driver
+            // Login
             mobileDriver.get("http://localhost:8080/login.html");
             mobileWait.until(d -> ((JavascriptExecutor) d)
                     .executeScript("return document.readyState").equals("complete"));
@@ -77,16 +88,11 @@ public class DashboardInteractiveTests extends BaseTest {
             WebElement sidebar = mobileDriver.findElement(By.id("sidebar"));
             WebElement toggleBtn = mobileDriver.findElement(By.id("sidebarToggle"));
 
-            // Initially sidebar should not have 'collapsed' class
             assertFalse(sidebar.getAttribute("class").contains("collapsed"));
 
-            // Click toggle
             toggleBtn.click();
-
-            // After click, sidebar should have 'collapsed' class
             assertTrue(sidebar.getAttribute("class").contains("collapsed"));
 
-            // Check sidebar style under mobile view
             String sidebarWidth = sidebar.getCssValue("width");
             System.out.println("Sidebar width: " + sidebarWidth);
             assertTrue(sidebarWidth.equals("100%") || sidebarWidth.endsWith("px"));
@@ -94,6 +100,17 @@ public class DashboardInteractiveTests extends BaseTest {
         } finally {
             if (mobileDriver != null) {
                 mobileDriver.quit();
+            }
+            if (tempMobileUserDataDir != null) {
+                try {
+                    Files.walk(tempMobileUserDataDir)
+                            .sorted((a, b) -> b.compareTo(a)) // delete children before parents
+                            .forEach(p -> {
+                                try {
+                                    Files.delete(p);
+                                } catch (Exception ignored) {}
+                            });
+                } catch (Exception ignored) {}
             }
         }
     }
