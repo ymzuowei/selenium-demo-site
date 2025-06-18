@@ -1,7 +1,70 @@
-<!DOCTYPE html><html><head><title>Dashboard</title></head><body>
-  <h1 id="welcome"></h1>
-  <script>
-    document.getElementById('welcome').innerText = 'Welcome ' +
-      (document.cookie.includes('auth=1') ? 'demo user' : 'guest');
-  </script>
-</body></html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Dashboard with Interaction</title>
+  <link rel="stylesheet" href="assets/dashboard.css" />
+</head>
+<body>
+  <aside id="sidebar">
+    <header>Dashboard</header>
+    <nav>
+      <a href="#">User Stats</a>
+      <a href="#">Recent Activity</a>
+      <a href="#">Settings</a>
+    </nav>
+    <div class="toggle-btn" id="sidebarToggle">Toggle</div>
+  </aside>
+
+  <div id="main-content">
+    <header id="topbar">
+      <div id="user-menu">
+        <button id="userBtn">User &#x25BC;</button>
+        <ul id="userDropdown">
+          <li id="logoutBtn">Logout</li>
+        </ul>
+      </div>
+    </header>
+
+    <div class="grid">
+      <div class="card" id="card1">
+        <div class="card-header">
+          User Stats
+          <span class="arrow">&#9654;</span>
+        </div>
+        <div class="card-content">
+          <p>Users: 1234</p>
+          <p>Active today: 345</p>
+        </div>
+      </div>
+
+      <div class="card" id="card2">
+        <div class="card-header">
+          Recent Activity
+          <span class="arrow">&#9654;</span>
+        </div>
+        <div class="card-content">
+          <ul>
+            <li>Login by user eve.holt</li>
+            <li>Settings changed by admin</li>
+            <li>New user registered</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="card" id="card3">
+        <div class="card-header">
+          Settings
+          <span class="arrow">&#9654;</span>
+        </div>
+        <div class="card-content">
+          <button id="settingsBtn">Open Settings</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="assets/dashboard.js"></script>
+</body>
+</html>

@@ -23,9 +23,11 @@ document.getElementById('loginForm').addEventListener('submit', async function(e
       document.cookie = `auth_token=${data.token}; path=/; max-age=${60 * 60 * 24}`;
       document.getElementById('msg').textContent = 'Login successful!';
     } else {
+      document.cookie = "auth_token=; path=/; max-age=0";
       document.getElementById('error').textContent = data.error || 'Login failed';
     }
   } catch (err) {
+    document.cookie = "auth_token=; path=/; max-age=0";
     document.getElementById('error').textContent = 'Network error';
   }
 });
