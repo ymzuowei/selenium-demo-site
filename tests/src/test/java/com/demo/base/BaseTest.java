@@ -1,58 +1,36 @@
 package com.demo.base;
 
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
+import com.demo.util.ScreenshotUtil;
+import org.junit.jupiter.api.*;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import org.openqa.selenium.WebDriver;
 
 import java.time.Duration;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.UUID;
 
 public class BaseTest {
-  protected WebDriver driver;
-  protected WebDriverWait wait;
-  private Path tempUserDataDir; // store temp user data dir for cleanup
 
-  @BeforeEach
-  public void setUp() throws Exception {
-    ChromeOptions options = new ChromeOptions();
+    protected WebDriver driver;
+    protected WebDriverWait wait;
 
-    // Run Chrome headless in CI
-    options.addArguments("--headless=new");  // or "--headless"
-    options.addArguments("--no-sandbox"); // Required in many CI environments
-    options.addArguments("--disable-dev-shm-usage"); // Overcome limited /dev/shm space in containers
-    options.addArguments("window-size=1280,960");
-    options.addArguments("--remote-debugging-port=0");
-
-    // Create a unique temp directory for chrome user data to avoid session conflicts in parallel CI runs
-    tempUserDataDir = Files.createTempDirectory("chrome-user-data-" + UUID.randomUUID());
-    options.addArguments("--user-data-dir=" + tempUserDataDir.toAbsolutePath().toString());
-
-    driver = new ChromeDriver(options);
-    wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-  }
-
-  @AfterEach
-  public void tearDown() {
-    if (driver != null) {
-      driver.quit();
-      driver = null;
+    @BeforeEach
+    public void setUp(TestInfo testInfo) {
+        ChromeOptions options = new ChromeOptions();
+        options.addArguments("--headless=new", "--no-sandbox", "--disable-dev-shm-usage", "window-size=1280,960");
+        driver = new ChromeDriver(options);
+        wait = new WebDriverWait(driver, Duration.ofSeconds(5));
+        System.out.println("[BaseTest] Starting test: " + testInfo.getDisplayName());
     }
 
-    // Clean up the temporary user data directory
-    if (tempUserDataDir != null) {
-      try {
-        Files.walk(tempUserDataDir)
-          .sorted((a, b) -> b.compareTo(a)) // delete children before parents
-          .forEach(path -> {
-            try { Files.delete(path); } catch (Exception ignored) {}
-          });
-      } catch (Exception ignored) {}
-      tempUserDataDir = null;
+    @AfterEach
+    public void tearDown(TestInfo testInfo) {
+        if (driver != null) {
+            // Capture screenshot BEFORE quitting the driver
+            ScreenshotUtil.capture(driver, testInfo.getTestMethod().map(m -> m.getName()).orElse("unknownTest"));
+
+            driver.quit();
+            System.out.println("[BaseTest] Driver quit.");
+        }
     }
-  }
 }

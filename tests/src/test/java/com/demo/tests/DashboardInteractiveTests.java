@@ -19,13 +19,7 @@ import java.time.Duration;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import com.demo.extensions.ScreenshotOnFailureWatcher;
-import org.junit.jupiter.api.extension.RegisterExtension;
-
 public class DashboardInteractiveTests extends BaseTest {
-
-    @RegisterExtension
-    ScreenshotOnFailureWatcher screenshotWatcher = new ScreenshotOnFailureWatcher(driver);
 
     public void doLogin(String email, String password) {
         driver.get("http://localhost:8080/login.html");

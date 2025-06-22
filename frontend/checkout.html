@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Checkout</title>
+  <link rel="stylesheet" href="assets/css/base.css" />
+  <link rel="stylesheet" href="assets/css/dashboard.css" />
+  <style>
+    .checkout-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+      background: white;
+    }
+    .checkout-table th, .checkout-table td {
+      padding: 12px;
+      border: 1px solid #ddd;
+      text-align: center;
+    }
+    .total-row {
+      font-weight: bold;
+      background: #f9f9f9;
+    }
+    .payment-options {
+      margin-top: 20px;
+      padding: 1rem;
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+    }
+    .payment-options label {
+      display: inline-block;
+      margin-right: 1.5rem;
+    }
+    .pay-button {
+      margin-top: 20px;
+      padding: 10px 20px;
+      background: #007BFF;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <script>
+    // ✅ Enforce auth: redirect to login if no cookie
+    function getCookie(name) {
+      const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
+      return match ? match[2] : null;
+    }
+
+    if (!getCookie('auth_token')) {
+      window.location.href = 'login.html';
+    }
+  </script>
+
+  <div id="main-content">
+    <header id="topbar">
+      <h2>Checkout</h2>
+    </header>
+
+    <table class="checkout-table" id="checkoutTable">
+      <thead>
+        <tr>
+          <th>Product</th>
+          <th>Price</th>
+          <th>Qty</th>
+          <th>Subtotal</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+      <tfoot>
+        <tr class="total-row">
+          <td colspan="3">Total</td>
+          <td id="totalPrice">$0.00</td>
+        </tr>
+      </tfoot>
+    </table>
+
+    <div class="payment-options">
+      <h3>Select Payment Method</h3>
+      <label><input type="radio" name="payment" value="wechat" checked> WeChat Pay</label>
+      <label><input type="radio" name="payment" value="alipay"> Alipay</label>
+    </div>
+
+    <a href="cart.html">Back to Cart</a>
+
+    <form onsubmit="submitOrder(event)">
+      <label for="address">Shipping Address:</label><br />
+      <input type="text" id="address" required /><br /><br />
+      <button class="pay-button" type="submit">Place Order</button>
+    </form>
+  </div>
+
+  <script>
+    function getCart() {
+      const items = JSON.parse(localStorage.getItem('cart') || '[]');
+      const consolidated = {};
+      for (const item of items) {
+        if (consolidated[item.name]) {
+          consolidated[item.name].quantity += 1;
+        } else {
+          consolidated[item.name] = { ...item, quantity: 1 };
+        }
+      }
+      return Object.values(consolidated);
+    }
+
+    function renderCheckout() {
+      const tableBody = document.querySelector('#checkoutTable tbody');
+      tableBody.innerHTML = '';
+      const cart = getCart();
+      let total = 0;
+
+      for (const item of cart) {
+        const subtotal = item.price * item.quantity;
+        total += subtotal;
+
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${item.name}</td>
+          <td>$${item.price.toFixed(2)}</td>
+          <td>${item.quantity}</td>
+          <td>$${subtotal.toFixed(2)}</td>
+        `;
+        tableBody.appendChild(row);
+      }
+
+      document.getElementById('totalPrice').textContent = `$${total.toFixed(2)}`;
+    }
+
+    function submitOrder(event) {
+      event.preventDefault();
+      const address = document.getElementById("address").value;
+      const paymentMethod = document.querySelector('input[name="payment"]:checked').value;
+      const order = {
+        address,
+        payment: paymentMethod,
+        items: getCart()
+      };
+
+      localStorage.setItem("lastOrder", JSON.stringify(order));
+      localStorage.removeItem("cart");
+      window.location.href = "confirmation.html";
+
+    }
+
+    renderCheckout();
+  </script>
+</body>
+</html>
