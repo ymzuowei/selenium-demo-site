@@ -45,6 +45,17 @@ public class CheckoutTests extends BaseTest {
     }
 
     @Test
+    public void testCheckoutRedirectsToLoginIfNotLoggedIn() {
+        driver.get("http://localhost:8080/checkout.html");
+        // Wait for redirect to login.html
+        wait.until(ExpectedConditions.urlContains("login.html"));
+
+        // Assert current URL contains "login.html"
+        assertTrue(driver.getCurrentUrl().contains("login.html"),
+                "Accessing checkout without login should redirect to login page");
+    }
+
+    @Test
     public void testProceedToCheckout() {
         driver.findElement(By.cssSelector(".add-to-cart")).click();
         handleAlertIfPresent(driver);
