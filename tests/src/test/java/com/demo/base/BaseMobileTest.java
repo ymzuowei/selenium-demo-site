@@ -16,6 +16,7 @@ public class BaseMobileTest {
 
     @BeforeEach
     public void setUpMobile(TestInfo testInfo) {
+        System.clearProperty("webdriver.chrome.driver");
         ChromeOptions options = new ChromeOptions();
         options.addArguments("--headless=new", "--no-sandbox", "--disable-dev-shm-usage");
         options.addArguments("window-size=375,667"); // iPhone 8 portrait for example
