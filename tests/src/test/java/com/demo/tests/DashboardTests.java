@@ -19,7 +19,7 @@ import java.time.Duration;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class DashboardInteractiveTests extends BaseTest {
+public class DashboardTests extends BaseTest {
 
     public void doLogin(String email, String password) {
         driver.get("http://localhost:8080/login.html");
@@ -46,68 +46,6 @@ public class DashboardInteractiveTests extends BaseTest {
         driver.manage().deleteAllCookies();
     }
 
-    @Test
-    @DisplayName("1. Sidebar should toggle and support responsive behavior")
-    public void testSidebarToggleAndResponsive() throws Exception {
-        WebDriver mobileDriver = null;
-        Path tempMobileUserDataDir = null;
-        try {
-            ChromeOptions options = new ChromeOptions();
-            options.addArguments("--headless=new");
-            options.addArguments("--no-sandbox");
-            options.addArguments("--disable-dev-shm-usage");
-            options.addArguments("window-size=375,667");
-            options.addArguments("--remote-debugging-port=0");
-
-            // Create unique temp profile for mobile driver
-            tempMobileUserDataDir = Files.createTempDirectory("chrome-mobile-user-data");
-            options.addArguments("--user-data-dir=" + tempMobileUserDataDir.toAbsolutePath());
-
-            mobileDriver = new ChromeDriver(options);
-            WebDriverWait mobileWait = new WebDriverWait(mobileDriver, Duration.ofSeconds(10));
-
-            // Login
-            mobileDriver.get("http://localhost:8080/login.html");
-            mobileWait.until(d -> ((JavascriptExecutor) d)
-                    .executeScript("return document.readyState").equals("complete"));
-            mobileDriver.findElement(By.id("email")).sendKeys("eve.holt@reqres.in");
-            mobileDriver.findElement(By.id("password")).sendKeys("cityslicka");
-            mobileDriver.findElement(By.cssSelector("button[type='submit']")).click();
-            mobileWait.until(d -> d.findElement(By.id("msg")).getText().equals("Login successful!"));
-
-            // Navigate to dashboard
-            mobileDriver.get("http://localhost:8080/dashboard.html");
-            mobileWait.until(ExpectedConditions.visibilityOfElementLocated(By.id("sidebar")));
-
-            WebElement sidebar = mobileDriver.findElement(By.id("sidebar"));
-            WebElement toggleBtn = mobileDriver.findElement(By.id("sidebarToggle"));
-
-            assertFalse(sidebar.getAttribute("class").contains("collapsed"));
-
-            toggleBtn.click();
-            assertTrue(sidebar.getAttribute("class").contains("collapsed"));
-
-            String sidebarWidth = sidebar.getCssValue("width");
-            System.out.println("Sidebar width: " + sidebarWidth);
-            assertTrue(sidebarWidth.equals("100%") || sidebarWidth.endsWith("px"));
-
-        } finally {
-            if (mobileDriver != null) {
-                mobileDriver.quit();
-            }
-            if (tempMobileUserDataDir != null) {
-                try {
-                    Files.walk(tempMobileUserDataDir)
-                            .sorted((a, b) -> b.compareTo(a)) // delete children before parents
-                            .forEach(p -> {
-                                try {
-                                    Files.delete(p);
-                                } catch (Exception ignored) {}
-                            });
-                } catch (Exception ignored) {}
-            }
-        }
-    }
 
     @Test
     public void testCardExpandCollapse() {

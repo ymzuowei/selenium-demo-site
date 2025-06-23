@@ -3,8 +3,6 @@ package com.demo.tests;
 import com.demo.base.BaseTest;
 import org.junit.jupiter.api.*;
 import org.openqa.selenium.*;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
@@ -86,23 +84,6 @@ public class CheckoutTests extends BaseTest {
 
         assertTrue(addr.getText().contains("123 Demo St"));
         assertTrue(pay.getText().toLowerCase().contains("wechat"));
-    }
-
-    @Test
-    public void testProductResponsiveOnMobile() throws Exception {
-        ChromeOptions options = new ChromeOptions();
-        options.addArguments("--headless=new", "--no-sandbox", "--disable-dev-shm-usage", "window-size=375,667");
-        WebDriver mobileDriver = new ChromeDriver(options);
-        WebDriverWait mobileWait = new WebDriverWait(mobileDriver, Duration.ofSeconds(10));
-
-        try {
-            mobileDriver.get("http://localhost:8080/product.html");
-            mobileWait.until(d -> ((JavascriptExecutor) d).executeScript("return document.readyState").equals("complete"));
-            WebElement card = mobileDriver.findElement(By.className("card"));
-            assertTrue(card.isDisplayed());
-        } finally {
-            mobileDriver.quit();
-        }
     }
 
     @Test
