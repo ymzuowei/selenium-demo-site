@@ -1,5 +1,6 @@
 package com.demo.tests.common;
 
+import com.demo.pages.ProductPage;
 import com.demo.util.FileAssertions;
 import com.demo.util.ImageAssertions;
 import org.junit.jupiter.api.Test;
@@ -14,21 +15,23 @@ public abstract class BaseProductPageTest {
 
     protected WebDriver driver;
     protected WebDriverWait wait;
+    protected ProductPage productPage;
 
     public BaseProductPageTest(WebDriver driver, WebDriverWait wait) {
         this.driver = driver;
         this.wait = wait;
+        this.productPage = new ProductPage(driver);
     }
 
     @Test
     public void testAllProductImagesLoaded() {
-        List<WebElement> images = driver.findElements(By.cssSelector(".card img"));
+        List<WebElement> images = productPage.getImages();
         ImageAssertions.assertImagesLoaded(driver, images);
     }
 
     @Test
     public void testAllProductVideosArePlayableAndMuted() {
-        List<WebElement> videos = driver.findElements(By.cssSelector(".card video"));
+        List<WebElement> videos = productPage.getVideos();
         assertFalse(videos.isEmpty(), "No product videos found");
 
         for (WebElement video : videos) {
@@ -45,7 +48,7 @@ public abstract class BaseProductPageTest {
     @Test
     public void testAddToCartButtonWorks() {
         WebElement firstButton = wait.until(ExpectedConditions.elementToBeClickable(
-                By.cssSelector(".card button.add-to-cart")));
+                productPage.getAddToCartButtons().get(0)));
         firstButton.click();
 
         try {
@@ -62,7 +65,7 @@ public abstract class BaseProductPageTest {
 
     @Test
     public void testAllProductManualLinksAreDownloadable() {
-        List<WebElement> downloadLinks = driver.findElements(By.cssSelector(".download-manual"));
+        List<WebElement> downloadLinks = productPage.getManualLinks();
         assertFalse(downloadLinks.isEmpty(), "No download links found");
 
         for (WebElement link : downloadLinks) {
