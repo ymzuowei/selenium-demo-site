@@ -5,6 +5,8 @@ import org.openqa.selenium.support.ui.Select;
 
 import java.util.List;
 
+import com.demo.config.Config;
+
 public class CartPage {
     private WebDriver driver;
 
@@ -13,7 +15,7 @@ public class CartPage {
     }
 
     public void open() {
-        driver.get("http://localhost:8080/cart.html");
+        driver.get(Config.getBaseUrl() + "cart.html");
     }
 
     public List<WebElement> getCartRows() {

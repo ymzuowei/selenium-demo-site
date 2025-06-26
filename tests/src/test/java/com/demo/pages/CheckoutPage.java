@@ -2,6 +2,8 @@ package com.demo.pages;
 
 import org.openqa.selenium.*;
 
+import com.demo.config.Config;
+
 public class CheckoutPage {
     private WebDriver driver;
 
@@ -10,7 +12,7 @@ public class CheckoutPage {
     }
 
     public void open() {
-        driver.get("http://localhost:8080/checkout.html");
+        driver.get(Config.getBaseUrl() + "checkout.html");
     }
 
     public WebElement getOrderSummary() {

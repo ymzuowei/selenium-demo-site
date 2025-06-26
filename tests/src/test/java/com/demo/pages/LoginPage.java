@@ -2,6 +2,8 @@ package com.demo.pages;
 
 import org.openqa.selenium.*;
 
+import com.demo.config.Config;
+
 public class LoginPage {
     private WebDriver driver;
 
@@ -10,7 +12,7 @@ public class LoginPage {
     }
 
     public void open() {
-        driver.get("http://localhost:8080/login.html");
+        driver.get(Config.getBaseUrl() + "login.html");
     }
 
     public void login(String username, String password) {

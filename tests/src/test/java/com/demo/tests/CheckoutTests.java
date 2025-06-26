@@ -1,6 +1,8 @@
 package com.demo.tests;
 
-import com.demo.base.BaseTest;
+import com.demo.base.BaseWebTest;
+import com.demo.config.Config;
+
 import org.junit.jupiter.api.*;
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -10,10 +12,10 @@ import java.time.Duration;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class CheckoutTests extends BaseTest {
+public class CheckoutTests extends BaseWebTest {
     @BeforeEach
     public void loadProductPage() {
-        driver.get("http://localhost:8080/product.html");
+        driver.get(Config.getBaseUrl() + "product.html");
         wait.until(d -> ((JavascriptExecutor) d)
                 .executeScript("return document.readyState").equals("complete"));
     }
@@ -36,7 +38,7 @@ public class CheckoutTests extends BaseTest {
     }
 
     public void doLogin(String email, String password) {
-        driver.get("http://localhost:8080/login.html");
+        driver.get(Config.getBaseUrl() + "login.html");
         wait.until(d -> ((JavascriptExecutor) d).executeScript("return document.readyState").equals("complete"));
         driver.findElement(By.id("email")).sendKeys(email);
         driver.findElement(By.id("password")).sendKeys(password);
@@ -46,7 +48,7 @@ public class CheckoutTests extends BaseTest {
 
     @Test
     public void testCheckoutRedirectsToLoginIfNotLoggedIn() {
-        driver.get("http://localhost:8080/checkout.html");
+        driver.get(Config.getBaseUrl() + "checkout.html");
         // Wait for redirect to login.html
         wait.until(ExpectedConditions.urlContains("login.html"));
 
@@ -62,7 +64,7 @@ public class CheckoutTests extends BaseTest {
         
         doLogin("eve.holt@reqres.in", "cityslicka");
 
-        driver.get("http://localhost:8080/cart.html");
+        driver.get(Config.getBaseUrl() + "cart.html");
         driver.findElement(By.id("checkoutBtn")).click();
 
         wait.until(ExpectedConditions.urlContains("checkout.html"));
@@ -88,7 +90,7 @@ public class CheckoutTests extends BaseTest {
                 "}";
 
         ((JavascriptExecutor) driver).executeScript("localStorage.setItem('lastOrder', arguments[0]);", mockOrder);
-        driver.get("http://localhost:8080/confirmation.html");
+        driver.get(Config.getBaseUrl() + "confirmation.html");
 
         WebElement addr = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("address")));
         WebElement pay = driver.findElement(By.id("payment"));
@@ -100,7 +102,7 @@ public class CheckoutTests extends BaseTest {
     @Test
     public void testCheckoutFailsWithEmptyFields() {
         doLogin("eve.holt@reqres.in", "cityslicka");
-        driver.get("http://localhost:8080/checkout.html");
+        driver.get(Config.getBaseUrl() + "checkout.html");
         driver.findElement(By.cssSelector("button[type='submit']")).click();
 
         // Should not redirect to confirmation.html
@@ -110,7 +112,7 @@ public class CheckoutTests extends BaseTest {
     @Test
     public void testConfirmationShowsNoOrderIfEmpty() {
         ((JavascriptExecutor) driver).executeScript("localStorage.removeItem('lastOrder');");
-        driver.get("http://localhost:8080/confirmation.html");
+        driver.get(Config.getBaseUrl() + "confirmation.html");
 
         WebElement noOrder = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("noOrderMsg")));
         assertTrue(noOrder.isDisplayed());

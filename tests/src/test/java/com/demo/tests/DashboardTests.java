@@ -1,28 +1,21 @@
 package com.demo.tests;
 
-import com.demo.base.BaseTest;
+import com.demo.base.BaseWebTest;
+import com.demo.config.Config;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInfo;
 import org.openqa.selenium.*;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
-
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.time.Duration;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class DashboardTests extends BaseTest {
+public class DashboardTests extends BaseWebTest {
 
     public void doLogin(String email, String password) {
-        driver.get("http://localhost:8080/login.html");
+        driver.get(Config.getBaseUrl() + "login.html");
         wait.until(d -> ((JavascriptExecutor) d)
                 .executeScript("return document.readyState").equals("complete"));
         driver.findElement(By.id("email")).sendKeys(email);
@@ -36,7 +29,7 @@ public class DashboardTests extends BaseTest {
         if (!testInfo.getDisplayName().equals("testDashboardRedirectsToLoginIfNotLoggedIn()")) {
             doLogin("eve.holt@reqres.in", "cityslicka");
         }
-        driver.get("http://localhost:8080/dashboard.html");
+        driver.get(Config.getBaseUrl() + "dashboard.html");
         wait.until(d -> ((JavascriptExecutor) d)
                 .executeScript("return document.readyState").equals("complete"));
     }
@@ -45,7 +38,6 @@ public class DashboardTests extends BaseTest {
     public void endTests() {
         driver.manage().deleteAllCookies();
     }
-
 
     @Test
     public void testCardExpandCollapse() {

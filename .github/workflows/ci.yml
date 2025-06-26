@@ -2,6 +2,9 @@ name: Selenium Java Test
 
 on: [push]
 
+env:
+  CI: true
+
 jobs:
   test:
     runs-on: ubuntu-latest

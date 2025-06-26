@@ -10,14 +10,17 @@
     <dependency>
       <groupId>org.seleniumhq.selenium</groupId>
       <artifactId>selenium-java</artifactId>
-      <version>4.33.0</version>
+      <!-- <version>4.33.0</version> -->
+      <version>4.11.0</version>
     </dependency>
 
     <!-- Chrome DevTools Protocol for Chrome v137 -->
     <dependency>
       <groupId>org.seleniumhq.selenium</groupId>
-      <artifactId>selenium-devtools-v137</artifactId>
-      <version>4.33.0</version>
+      <!-- <artifactId>selenium-devtools-v137</artifactId> -->
+      <artifactId>selenium-devtools-v115</artifactId>
+      <!-- <version>4.33.0</version> -->
+      <version>4.11.0</version>
     </dependency>
 
     <!-- JUnit Jupiter API for writing tests -->
@@ -41,6 +44,13 @@
       <artifactId>junit-platform-suite</artifactId>
       <version>1.10.0</version>
       <scope>test</scope>
+    </dependency>
+
+    <!-- Appium Java Client -->
+    <dependency>
+      <groupId>io.appium</groupId>
+      <artifactId>java-client</artifactId>
+      <version>8.5.1</version>
     </dependency>
   </dependencies>
 
