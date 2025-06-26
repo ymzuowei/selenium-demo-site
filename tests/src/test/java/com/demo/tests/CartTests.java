@@ -1,6 +1,6 @@
 package com.demo.tests;
 
-import com.demo.base.BaseTest;
+import com.demo.base.BaseWebTest;
 import com.demo.pages.CartPage;
 import com.demo.pages.ProductPage;
 import org.junit.jupiter.api.*;
@@ -12,7 +12,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class CartTests extends BaseTest {
+public class CartTests extends BaseWebTest {
 
     private ProductPage productPage;
     private CartPage cartPage;

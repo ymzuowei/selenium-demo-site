@@ -1,16 +1,18 @@
 package com.demo.tests;
 
-import com.demo.base.BaseTest;
+import com.demo.base.BaseWebTest;
+import com.demo.config.Config;
+
 import org.junit.jupiter.api.*;
 import org.openqa.selenium.By;
 import org.openqa.selenium.support.ui.Select;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class FormValidationTests extends BaseTest {
+public class FormValidationTests extends BaseWebTest {
     @BeforeEach
     public void loadFormPage() {
-        driver.get("http://localhost:8080/forms/form.html");
+        driver.get(Config.getBaseUrl() + "forms/form.html");
     }
 
     @Test

@@ -3,6 +3,8 @@ package com.demo.pages;
 import org.openqa.selenium.*;
 import java.util.List;
 
+import com.demo.config.Config;
+
 public class ProductPage {
     private WebDriver driver;
 
@@ -11,7 +13,7 @@ public class ProductPage {
     }
 
     public void open() {
-        driver.get("http://localhost:8080/product.html");
+        driver.get(Config.getBaseUrl() + "product.html");
     }
 
     public List<WebElement> getAddToCartButtons() {

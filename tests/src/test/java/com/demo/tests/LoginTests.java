@@ -1,15 +1,17 @@
 package com.demo.tests;
-import com.demo.base.BaseTest;
+import com.demo.base.BaseWebTest;
+import com.demo.config.Config;
+
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Cookie;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.BeforeEach;
 
-public class LoginTests extends BaseTest {
+public class LoginTests extends BaseWebTest {
     @BeforeEach
     public void loadFormPage() {
-        driver.get("http://localhost:8080/login.html");
+        driver.get(Config.getBaseUrl() + "login.html");
     }
 
     @Test
