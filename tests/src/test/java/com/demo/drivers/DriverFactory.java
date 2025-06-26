@@ -56,7 +56,12 @@ public class DriverFactory {
             case SAFARI:
                 return new SafariDriver();
             case CHROME_RESPONSIVE:
-                System.setProperty("webdriver.chrome.driver", "D:/chromedrivers/138.0.7204.50/chromedriver-win64/chromedriver.exe");
+            String isCI = System.getenv("CI");
+                if (isCI == null || !isCI.equals("true")) {
+                    // Local Windows development
+                    System.setProperty("webdriver.chrome.driver", "D:/chromedrivers/138.0.7204.50/chromedriver-win64/chromedriver.exe");
+                }
+
                 ChromeOptions mobileOpts = new ChromeOptions();
                 mobileOpts.setExperimentalOption("mobileEmulation", Map.of("deviceName", "Pixel 2"));
                 mobileOpts.addArguments("--window-size=375,667"); // iPhone X resolution
