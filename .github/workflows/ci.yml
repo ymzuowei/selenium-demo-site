@@ -78,5 +78,6 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./tests/target/site/allure-maven-plugin
           publish_branch: gh-pages
+          clean: true   # Delete previous files before pushing new ones
           user_name: 'github-actions[bot]'
           user_email: 'github-actions[bot]@users.noreply.github.com'
