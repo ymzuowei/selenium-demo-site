@@ -1,87 +1,167 @@
-# selenium-demo-site
+# Selenium Demo Site
 
-A comprehensive demonstration project showcasing robust automation testing using Selenium, featuring:
+A personal project to showcase automation testing capabilities using Selenium, JUnit 5, and modern web development practices.
 
-* **Login Validation:** Secure access with API integration, cookie/session handling, and error management.
+---
 
-* **Form Validation:** Real-time feedback, email uniqueness checks, and comprehensive input validation (email, phone, country, agreement, gender).
+## ✨ Highlights
 
-* **Dashboard Interactions:** Dynamic sidebar, collapsible cards, and interactive user menu with logout functionality.
+* Full end-to-end test coverage for an e-commerce-like frontend  
+* Responsive layout testing (desktop and mobile)  
+* Cross-browser automation including 360 Secure Browser (Chrome-based)  
+* GitHub Actions CI for Docker-based test execution  
+* Page Object Model with reusable base classes and utilities  
 
-* **Product & E-commerce Flow:** Product display (images, videos, manuals), shopping cart (add, remove, update items, subtotal/total calculation, persistence), and a complete checkout process to order confirmation.
+---
 
-* **Responsive Layout:** Ensuring optimal viewing and usability across desktop and mobile viewports.
+## 📚 Project Structure
 
-* **Key Achievement: Targeted Browser Compatibility (360 Browser)**
+```
+selenium-demo-site/
+├── frontend/                  # Static HTML/CSS/JS frontend
+│   ├── cart.html              # Shopping cart with quantity editing
+│   ├── checkout.html          # Checkout process with address & payment
+│   ├── confirmation.html      # Order summary and finalization
+│   ├── dashboard.html         # Protected dashboard with sidebar/cards
+│   ├── forms/form.html        # Registration form with validation
+│   ├── login.html             # Login with reqres API auth
+│   └── product.html           # Product listing page
+│
+├── tests/                    # Selenium + JUnit test cases
+│   └── src/test/java/com/demo
+│       ├── base/              # BaseWebTest.java, config, driver management
+│       ├── pages/             # Page Object classes (LoginPage, CartPage...)
+│       ├── tests/             # Test classes (LoginTests, CartTests...)
+│       └── util/              # ScreenshotUtil, ImageAssertions, etc.
+│
+├── .github/workflows/ci.yml  # GitHub Actions pipeline
+└── README.md                 # —→ YOU ARE HERE
+```
 
-## Technologies & Methodology
+---
 
-This project utilizes modern tools and best practices for high-quality test automation:
+## 🚀 Features Tested
 
-* **Selenium WebDriver:** For browser automation.
+* **Login Flow:** Auth with [reqres.in](https://reqres.in/) API, cookie storage (`auth_token`)  
+* **Form Validation:** Inputs for email, phone, gender, country, agreement  
+* **Dashboard Interactions:** Sidebar toggle, card expand/collapse, logout  
+* **Product Listing:** Lazy images, video elements, downloadable PDFs  
+* **Shopping Cart:** Add/update/remove items, persistent localStorage cart  
+* **Checkout:** Address + payment method selection, order confirmation  
+* **Responsive UI:** Tested at desktop (1280x960) and mobile (375x667)  
 
-* **JUnit 5:** For reliable and repeatable test execution.
+---
 
-* **Page Object Model (POM):** Implemented for maintainable, scalable, and reusable test code by abstracting page elements and interactions into dedicated classes (e.g., `LoginPage.java`, `CartPage.java`, `ProductPage.java`).
+## ⚖️ Testing Stack
 
-* **Dedicated Test Base Classes:** `BaseTest.java` and `BaseMobileTest.java` provide consistent browser setup (including specific configuration for 360 Browser on desktop) and automatic screenshot capture.
+* **Selenium WebDriver** with **JUnit 5**  
+* **Page Object Model** design for maintainable code  
+* **BaseWebTest.java** for setup (Chrome, headless, mobile, screenshots)  
+* **Custom Utilities:**
+  * `ScreenshotUtil`: Screenshots on failure or step  
+  * `ImageAssertions`: Lazy image checks  
+  * `FileAssertions`: Valid download link validation  
+* **360 Secure Browser Support:**
+  * Via setting binary path to v132 Chrome-based binary  
 
-* **Custom Utilities:** Helper classes like `ScreenshotUtil`, `ImageAssertions`, and `FileAssertions` enhance test capabilities.
+---
 
-* **Docker:** For one-step, reproducible deployment of the frontend application, ensuring consistent test environments.
+## 📅 CI/CD via GitHub Actions
 
-* **GitHub Actions:** For automated Continuous Integration/Continuous Deployment (CI/CD), triggering tests on every code push and providing immediate feedback.
+* Triggers on `push`  
+* Docker builds the frontend  
+* Starts a local container (port 8080)  
+* Installs Chrome and compatible ChromeDriver  
+* Executes all Selenium tests via `mvn test`  
 
-## Quick Start
+```yaml
+- name: Build frontend Docker image
+  run: docker build -t demo-site frontend
 
-Follow these steps to get the demo site running and tests executing:
+- name: Run frontend container
+  run: docker run -d -p 8080:80 demo-site
 
-1.  **Build Docker Image:**
+- name: Run Selenium tests
+  run: cd tests && mvn test
+```
 
-    ```bash
-    docker build -t demo-site frontend
-    ```
+---
 
-2.  **Run Docker Container:**
+## 📈 Allure Test Reporting
 
-    ```bash
-    docker run -d -p 8080:80 demo-site
-    ```
+This project uses **Allure** to generate rich, interactive test reports for Selenium tests.
 
-3.  **Run Tests (Java/Maven):**
+### How to generate and view the report locally
 
-    * Ensure you have Java, Maven, and ChromeDriver (configured for 360 Browser if applicable) installed.
+After running your tests with Maven:
 
-    * Navigate to the `tests` directory:
+```bash
+cd tests
+mvn clean test
+mvn allure:serve
+```
 
-        ```bash
-        cd tests
-        ```
+This will run the tests, generate an Allure report, and start a local web server.  
+Open the URL shown in the terminal (usually `http://127.0.0.1:<port>/`) to view the interactive report.
 
-    * Execute tests:
+### How reporting is handled in CI (GitHub Actions)
 
-        ```bash
-        mvn test
-        ```
+* Test results are collected during the CI run.
+* Allure report is generated automatically after tests.
+* The report is deployed to GitHub Pages via [`peaceiris/actions-gh-pages`](https://github.com/peaceiris/actions-gh-pages).
 
-4.  **Automated CI:** Pushing code to GitHub will automatically trigger the configured CI tests via GitHub Actions.
+🧾 **Latest Report:**  
+➡️ https://<your-github-username>.github.io/selenium-demo-site/
 
-Once set up, the project effectively demonstrates robust login failure handling, comprehensive form validation, and adaptive responsive page layouts.
+> (Replace with your own GitHub Pages URL if forked. eg. https://ymzuowei.github.io/selenium-demo-site/)
 
-## Future Improvements (Roadmap)
+### Cleaning old reports
 
-To further scale and enhance the automation testing capabilities:
+* The CI workflow is configured with `clean: true`, ensuring only the latest report is published.
+* You can also clean your local report manually:
+  ```bash
+  rm -rf tests/target/allure-results tests/target/site/allure-maven-plugin
+  ```
 
-* **Expand Payment Gateway Testing:** Introduce dedicated integration tests for external payment services and dynamic promotions/discount codes.
+---
 
-* **Broader Cross-Browser & Device Testing:** Extend test coverage beyond the currently configured browsers to include Firefox, Safari, Edge, and various mobile device emulations or real devices.
+## 🔎 Example Test Case
 
-* **Integrate with Advanced CI/CD Tools:** Transition to more sophisticated CI/CD platforms like Jenkins or GitLab CI for enhanced reporting and parallel test execution.
+```java
+@Test
+public void testSingleItemSubtotalCalculation() {
+    productPage.addToCart(0);
+    handleAlertIfPresent();
+    cartPage.open();
+    WebElement row = cartPage.getCartRows().get(0);
+    double price = cartPage.getPrice(row);
+    double subtotal = cartPage.getSubtotal(row);
+    int qty = cartPage.getSelectedQuantity(row);
+    assertEquals(qty * price, subtotal, 0.01);
+}
+```
 
-* **Automated Testing Report Functionality:** Implement tools or custom solutions to generate comprehensive and easily digestible test reports.
+---
 
-* **Performance Testing Integration:** Add basic performance checks using tools like Lighthouse or JMeter to identify bottlenecks.
+## 📊 Planned Enhancements
 
-* **Accessibility (A11y) Testing:** Incorporate automated accessibility checks (e.g., using Axe-core) for enhanced inclusivity.
+* Add payment integration (Stripe/PayPal test mode)  
+* Expand real-device mobile browser testing (e.g. Android/iOS)  
+* Automated test reporting (HTML, Markdown summary)  
+* CI migration to Jenkins/GitLab for advanced pipelines  
+* Add Lighthouse or JMeter-based performance tests  
+* Add API-level tests for login, checkout, etc.  
+* Accessibility (a11y) test integration  
 
-* **API Testing:** Implement dedicated API tests for backend services to improve test execution speed and robustness.
+---
+
+## 📄 License
+
+This project is released under the **MIT License**.  
+It is free and open-source—feel free to use, modify, and share it without restriction.
+
+---
+
+## 👨‍💻 Author
+
+This project serves as a demonstration of modern QA practices using browser automation, CI/CD, and modular design for scalable web testing.

@@ -1,6 +1,9 @@
-name: Selenium Java Test
+name: Selenium Java Test with Allure Report
 
-on: [push]
+on:
+  push:
+    branches: [main]
+  pull_request:
 
 env:
   CI: true
@@ -54,5 +57,27 @@ jobs:
           sudo mv chromedriver-linux64/chromedriver /usr/local/bin/
           sudo chmod +x /usr/local/bin/chromedriver
 
-      - name: Run Selenium tests
-        run: cd tests && mvn test
+      - name: Run Selenium tests with Maven
+        run: cd tests && mvn clean test
+
+      # Generate Allure report
+      - name: Generate Allure Report
+        run: cd tests && mvn allure:report
+
+      # Upload Allure report as an artifact, for manual download if needed
+      - name: Upload Allure Report Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: allure-report
+          path: tests/target/site/allure-maven-plugin
+
+      # Deploy Allure report to GitHub Pages
+      - name: Deploy Allure Report to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./tests/target/site/allure-maven-plugin
+          publish_branch: gh-pages
+          clean: true   # Delete previous files before pushing new ones
+          user_name: 'github-actions[bot]'
+          user_email: 'github-actions[bot]@users.noreply.github.com'
