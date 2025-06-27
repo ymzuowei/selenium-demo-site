@@ -66,7 +66,7 @@ jobs:
 
       # Upload Allure report as an artifact, for manual download if needed
       - name: Upload Allure Report Artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: allure-report
           path: tests/target/site/allure-maven-plugin
