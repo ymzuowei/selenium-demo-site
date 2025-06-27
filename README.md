@@ -110,10 +110,12 @@ Open the URL shown in the terminal (usually `http://127.0.0.1:<port>/`) to view 
 * Allure report is generated automatically after tests.
 * The report is deployed to GitHub Pages via [`peaceiris/actions-gh-pages`](https://github.com/peaceiris/actions-gh-pages).
 
-🧾 **Latest Report:**  
-➡️ https://<your-github-username>.github.io/selenium-demo-site/
+## 🧾 Latest Report
 
-> (Replace with your own GitHub Pages URL if forked. eg. https://ymzuowei.github.io/selenium-demo-site/)
+➡️ **[View Allure Report](https://ymzuowei.github.io/selenium-demo-site/)**
+
+> If you forked this repo, update the link above to use your own GitHub Pages URL:  
+> `https://<your-github-username>.github.io/selenium-demo-site/`
 
 ### Cleaning old reports
 
