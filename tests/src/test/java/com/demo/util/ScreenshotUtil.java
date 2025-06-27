@@ -4,8 +4,9 @@ import com.demo.drivers.BrowserType;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
+import io.qameta.allure.Allure;
 
-import java.io.File;
+import java.io.ByteArrayInputStream;
 import java.nio.file.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -23,9 +24,9 @@ public class ScreenshotUtil {
         }
 
         try {
-            File screenshot = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
+            byte[] bytes = ((TakesScreenshot) driver).getScreenshotAs(OutputType.BYTES);
 
-            String browserFolder = browserType.name().toLowerCase(); // e.g., "android_real"
+            String browserFolder = browserType.name().toLowerCase();
             String dateFolder = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
             String timestamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("HHmmss"));
 
@@ -36,7 +37,9 @@ public class ScreenshotUtil {
             Files.createDirectories(destinationDir);
 
             Path destination = destinationDir.resolve(fileName);
-            Files.copy(screenshot.toPath(), destination, StandardCopyOption.REPLACE_EXISTING);
+            Files.write(destination, bytes, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
+
+            Allure.addAttachment(fileName, new ByteArrayInputStream(bytes));
 
             System.out.println("📸 Screenshot saved: " + destination);
         } catch (Exception e) {

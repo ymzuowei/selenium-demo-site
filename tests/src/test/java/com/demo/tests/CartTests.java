@@ -3,6 +3,7 @@ package com.demo.tests;
 import com.demo.base.BaseWebTest;
 import com.demo.pages.CartPage;
 import com.demo.pages.ProductPage;
+import io.qameta.allure.*;
 import org.junit.jupiter.api.*;
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.*;
@@ -12,12 +13,16 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@Epic("E-commerce")
+@Feature("Shopping Cart")
+@DisplayName("Cart Tests")
 public class CartTests extends BaseWebTest {
 
     private ProductPage productPage;
     private CartPage cartPage;
 
     @BeforeEach
+    @Step("Load product page and initialize page objects")
     public void loadProductPage() {
         productPage = new ProductPage(driver);
         cartPage = new CartPage(driver);
@@ -25,11 +30,13 @@ public class CartTests extends BaseWebTest {
     }
 
     @AfterEach
+    @Step("Clear cart state after each test")
     public void clearCart() {
         ((JavascriptExecutor) driver).executeScript("localStorage.clear();");
         driver.manage().deleteAllCookies();
     }
 
+    @Step("Handle alert if present")
     public void handleAlertIfPresent() {
         try {
             new WebDriverWait(driver, Duration.ofSeconds(3))
@@ -39,6 +46,8 @@ public class CartTests extends BaseWebTest {
     }
 
     @Test
+    @Story("Cart Calculation")
+    @DisplayName("Single item subtotal should be price × quantity")
     public void testSingleItemSubtotalCalculation() {
         productPage.addToCart(0);
         handleAlertIfPresent();
@@ -53,6 +62,8 @@ public class CartTests extends BaseWebTest {
     }
 
     @Test
+    @Story("Cart Calculation")
+    @DisplayName("Multiple product quantities should update subtotal and total correctly")
     public void testMultipleProductsInCart() {
         for (int i = 0; i < 3; i++) {
             productPage.addToCart(0);
@@ -91,6 +102,8 @@ public class CartTests extends BaseWebTest {
     }
 
     @Test
+    @Story("Cart Persistence")
+    @DisplayName("Quantity dropdown should persist after reload")
     public void testQuantityDropdownPersistenceAfterReload() {
         productPage.addToCart(0);
         handleAlertIfPresent();
@@ -106,6 +119,8 @@ public class CartTests extends BaseWebTest {
     }
 
     @Test
+    @Story("Cart Calculation")
+    @DisplayName("Updating quantity updates subtotal and total")
     public void testUpdateQuantityUpdatesSubtotalAndTotal() {
         productPage.addToCart(0);
         handleAlertIfPresent();
@@ -114,7 +129,6 @@ public class CartTests extends BaseWebTest {
         WebElement row = cartPage.getCartRows().get(0);
         cartPage.changeQuantity(row, 3);
 
-        // wait subtotal or total refresh and get the element again
         wait.until(ExpectedConditions.textToBePresentInElementLocated(By.id("total"), "$"));
 
         WebElement refreshedRow = cartPage.getCartRows().get(0);
@@ -127,6 +141,8 @@ public class CartTests extends BaseWebTest {
     }
 
     @Test
+    @Story("Cart Modification")
+    @DisplayName("Removing item should empty the cart")
     public void testRemoveItemEmptiesCart() {
         productPage.addToCart(0);
         handleAlertIfPresent();
@@ -142,12 +158,16 @@ public class CartTests extends BaseWebTest {
     }
 
     @Test
+    @Story("Cart UI")
+    @DisplayName("Cart shows empty state when there are no items")
     public void testCartEmptyState() {
         cartPage.open();
         assertEquals(0, cartPage.getCartRows().size());
     }
 
     @Test
+    @Story("Cart Navigation")
+    @DisplayName("Continue shopping link should go to product page")
     public void testContinueShoppingLink() {
         cartPage.open();
         cartPage.getContinueShoppingLink().click();
@@ -156,6 +176,8 @@ public class CartTests extends BaseWebTest {
     }
 
     @Test
+    @Story("Checkout Flow")
+    @DisplayName("Checkout redirects to login if not authenticated")
     public void testCheckoutButtonGoesToLoginIfNotLoggedIn() {
         productPage.addToCart(0);
         handleAlertIfPresent();

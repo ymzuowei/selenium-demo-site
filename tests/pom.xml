@@ -5,25 +5,58 @@
   <artifactId>tests</artifactId>
   <version>1.0-SNAPSHOT</version>
 
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <allure.version>2.25.0</allure.version>
+  </properties>
+
   <dependencies>
+    <!-- Force correct versions to resolve dependency conflicts -->
+    <dependency>
+      <groupId>io.netty</groupId>
+      <artifactId>netty-buffer</artifactId>
+      <version>4.1.92.Final</version>
+    </dependency>
+    <dependency>
+      <groupId>org.junit.platform</groupId>
+      <artifactId>junit-platform-commons</artifactId>
+      <version>1.10.2</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
+      <version>2.0.7</version>
+    </dependency>
+
+    <!-- SLF4J Implementation -->
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-simple</artifactId>
+      <version>2.0.7</version>
+    </dependency>
+
     <!-- Selenium Core Java -->
     <dependency>
       <groupId>org.seleniumhq.selenium</groupId>
       <artifactId>selenium-java</artifactId>
-      <!-- <version>4.33.0</version> -->
       <version>4.11.0</version>
+      <exclusions>
+        <exclusion>
+          <groupId>io.netty</groupId>
+          <artifactId>netty-buffer</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
 
-    <!-- Chrome DevTools Protocol for Chrome v137 -->
+    <!-- Chrome DevTools Protocol -->
     <dependency>
       <groupId>org.seleniumhq.selenium</groupId>
-      <!-- <artifactId>selenium-devtools-v137</artifactId> -->
       <artifactId>selenium-devtools-v115</artifactId>
-      <!-- <version>4.33.0</version> -->
       <version>4.11.0</version>
     </dependency>
 
-    <!-- JUnit Jupiter API for writing tests -->
+    <!-- JUnit Jupiter API -->
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter-api</artifactId>
@@ -31,7 +64,7 @@
       <scope>test</scope>
     </dependency>
 
-    <!-- JUnit Jupiter Engine for running tests -->
+    <!-- JUnit Jupiter Engine -->
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter-engine</artifactId>
@@ -39,6 +72,7 @@
       <scope>test</scope>
     </dependency>
 
+    <!-- JUnit Platform Suite -->
     <dependency>
       <groupId>org.junit.platform</groupId>
       <artifactId>junit-platform-suite</artifactId>
@@ -52,6 +86,19 @@
       <artifactId>java-client</artifactId>
       <version>8.5.1</version>
     </dependency>
+
+    <!-- Allure for JUnit 5 -->
+    <dependency>
+      <groupId>io.qameta.allure</groupId>
+      <artifactId>allure-junit5</artifactId>
+      <version>${allure.version}</version>
+      <exclusions>
+        <exclusion>
+          <groupId>org.slf4j</groupId>
+          <artifactId>slf4j-api</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
   </dependencies>
 
   <build>
@@ -61,12 +108,28 @@
         <artifactId>maven-surefire-plugin</artifactId>
         <version>3.2.5</version>
         <configuration>
-          <argLine>-Djdk.net.URLClassPath.disableClassPathURLCheck=true</argLine>
+          <argLine>-Djdk.net.URLClassPath.disableClassPathURLCheck=true -Xmx512m</argLine>
           <forkCount>1</forkCount>
           <reuseForks>false</reuseForks>
-          <argLine>-Xmx512m</argLine>
           <parallel>none</parallel>
+          <listeners>
+            <listener>io.qameta.allure.junit5.AllureJunit5</listener>
+          </listeners>
         </configuration>
+      </plugin>
+
+      <!-- Allure Maven Plugin -->
+      <plugin>
+        <groupId>io.qameta.allure</groupId>
+        <artifactId>allure-maven</artifactId>
+        <version>2.11.2</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>report</goal>
+            </goals>
+          </execution>
+        </executions>
       </plugin>
     </plugins>
   </build>

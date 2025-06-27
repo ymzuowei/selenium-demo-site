@@ -2,6 +2,7 @@ package com.demo.tests;
 
 import com.demo.base.BaseWebTest;
 import com.demo.config.Config;
+import io.qameta.allure.*;
 
 import org.junit.jupiter.api.*;
 import org.openqa.selenium.By;
@@ -9,13 +10,21 @@ import org.openqa.selenium.support.ui.Select;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@Epic("Form Validation")
+@Feature("Submission Validations")
+@DisplayName("Form Input Validation Tests")
 public class FormValidationTests extends BaseWebTest {
+
     @BeforeEach
+    @Step("Load the form.html page before each test")
     public void loadFormPage() {
         driver.get(Config.getBaseUrl() + "forms/form.html");
     }
 
     @Test
+    @Story("Valid Submission")
+    @DisplayName("Submit form with valid data")
+    @Severity(SeverityLevel.CRITICAL)
     public void testValidSubmission() {
         driver.findElement(By.id("email")).sendKeys("test@example.com");
         driver.findElement(By.id("phone")).sendKeys("1234567890");
@@ -25,7 +34,6 @@ public class FormValidationTests extends BaseWebTest {
 
         driver.findElement(By.id("agree")).click();
         driver.findElement(By.cssSelector("input[name='gender'][value='male']")).click();
-
         driver.findElement(By.cssSelector("button[type='submit']")).click();
 
         String message = wait.until(d -> d.findElement(By.id("msg"))).getText();
@@ -33,10 +41,12 @@ public class FormValidationTests extends BaseWebTest {
     }
 
     @Test
+    @Story("Invalid Email & Phone")
+    @DisplayName("Email and phone number should be validated")
+    @Severity(SeverityLevel.NORMAL)
     public void testInvalidEmailAndPhone() {
         driver.findElement(By.id("email")).sendKeys("invalid-email");
         driver.findElement(By.id("phone")).sendKeys("123");
-
         driver.findElement(By.cssSelector("button[type='submit']")).click();
 
         String emailError = driver.findElement(By.id("emailErr")).getText();
@@ -47,14 +57,15 @@ public class FormValidationTests extends BaseWebTest {
     }
 
     @Test
+    @Story("Required Country Field")
+    @DisplayName("Form should reject missing country selection")
+    @Severity(SeverityLevel.NORMAL)
     public void testMissingCountry() {
         driver.findElement(By.id("email")).sendKeys("test@example.com");
         driver.findElement(By.id("phone")).sendKeys("1234567890");
 
-        // Don't select a country
         driver.findElement(By.id("agree")).click();
         driver.findElement(By.cssSelector("input[name='gender'][value='female']")).click();
-
         driver.findElement(By.cssSelector("button[type='submit']")).click();
 
         String countryError = driver.findElement(By.id("countryErr")).getText();
@@ -62,6 +73,9 @@ public class FormValidationTests extends BaseWebTest {
     }
 
     @Test
+    @Story("Terms Agreement Required")
+    @DisplayName("User must agree to terms before submitting")
+    @Severity(SeverityLevel.NORMAL)
     public void testUncheckedAgreement() {
         driver.findElement(By.id("email")).sendKeys("test@example.com");
         driver.findElement(By.id("phone")).sendKeys("1234567890");
@@ -69,9 +83,7 @@ public class FormValidationTests extends BaseWebTest {
         Select country = new Select(driver.findElement(By.id("country")));
         country.selectByValue("cn");
 
-        // Don't check agreement
         driver.findElement(By.cssSelector("input[name='gender'][value='female']")).click();
-
         driver.findElement(By.cssSelector("button[type='submit']")).click();
 
         String agreeError = driver.findElement(By.id("agreeErr")).getText();
@@ -79,6 +91,9 @@ public class FormValidationTests extends BaseWebTest {
     }
 
     @Test
+    @Story("Gender Selection Required")
+    @DisplayName("User must select gender before submission")
+    @Severity(SeverityLevel.NORMAL)
     public void testMissingGender() {
         driver.findElement(By.id("email")).sendKeys("test@example.com");
         driver.findElement(By.id("phone")).sendKeys("1234567890");
@@ -87,8 +102,6 @@ public class FormValidationTests extends BaseWebTest {
         country.selectByValue("cn");
 
         driver.findElement(By.id("agree")).click();
-
-        // Don't select gender
         driver.findElement(By.cssSelector("button[type='submit']")).click();
 
         String genderError = driver.findElement(By.id("genderErr")).getText();
@@ -96,35 +109,38 @@ public class FormValidationTests extends BaseWebTest {
     }
 
     @Test
+    @Story("Email Uniqueness Check")
+    @DisplayName("Form should detect duplicate email via async check")
+    @Severity(SeverityLevel.MINOR)
     public void testEmailUniquenessCheck() {
         driver.findElement(By.id("email")).clear();
         driver.findElement(By.id("email")).sendKeys("taken@example.com");
 
-        // Trigger onblur by focusing on another field
-        driver.findElement(By.id("phone")).click();
+        driver.findElement(By.id("phone")).click(); // trigger onblur
 
         String emailStatus = wait.until(d -> {
             String text = d.findElement(By.id("emailStatus")).getText();
-            return text.equals("Email already registered") ? text : null;
+            return "Email already registered".equals(text) ? text : null;
         });
 
         assertEquals("Email already registered", emailStatus);
     }
 
     @Test
+    @Story("Email Availability Check")
+    @DisplayName("Form should confirm email availability via async check")
+    @Severity(SeverityLevel.MINOR)
     public void testEmailAvailableCheck() {
         driver.findElement(By.id("email")).clear();
         driver.findElement(By.id("email")).sendKeys("newuser@example.com");
 
-        // Trigger onblur by focusing on another field
-        driver.findElement(By.id("phone")).click();
+        driver.findElement(By.id("phone")).click(); // trigger onblur
 
         String emailStatus = wait.until(d -> {
             String text = d.findElement(By.id("emailStatus")).getText();
-            return text.equals("Email available") ? text : null;
+            return "Email available".equals(text) ? text : null;
         });
 
         assertEquals("Email available", emailStatus);
     }
-
 }
