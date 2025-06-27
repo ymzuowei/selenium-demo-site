@@ -11,32 +11,26 @@
   </properties>
 
   <dependencies>
-    <!-- Force correct versions to resolve dependency conflicts -->
+    <!-- Dependency conflict fix -->
     <dependency>
       <groupId>io.netty</groupId>
       <artifactId>netty-buffer</artifactId>
       <version>4.1.92.Final</version>
     </dependency>
-    <dependency>
-      <groupId>org.junit.platform</groupId>
-      <artifactId>junit-platform-commons</artifactId>
-      <version>1.10.2</version>
-      <scope>test</scope>
-    </dependency>
+
+    <!-- Logging -->
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
       <version>2.0.7</version>
     </dependency>
-
-    <!-- SLF4J Implementation -->
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-simple</artifactId>
       <version>2.0.7</version>
     </dependency>
 
-    <!-- Selenium Core Java -->
+    <!-- Selenium -->
     <dependency>
       <groupId>org.seleniumhq.selenium</groupId>
       <artifactId>selenium-java</artifactId>
@@ -48,31 +42,25 @@
         </exclusion>
       </exclusions>
     </dependency>
-
-    <!-- Chrome DevTools Protocol -->
     <dependency>
       <groupId>org.seleniumhq.selenium</groupId>
       <artifactId>selenium-devtools-v115</artifactId>
       <version>4.11.0</version>
     </dependency>
 
-    <!-- JUnit Jupiter API -->
+    <!-- JUnit 5 -->
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter-api</artifactId>
       <version>5.10.2</version>
       <scope>test</scope>
     </dependency>
-
-    <!-- JUnit Jupiter Engine -->
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter-engine</artifactId>
       <version>5.10.2</version>
       <scope>test</scope>
     </dependency>
-
-    <!-- JUnit Platform Suite -->
     <dependency>
       <groupId>org.junit.platform</groupId>
       <artifactId>junit-platform-suite</artifactId>
@@ -80,7 +68,7 @@
       <scope>test</scope>
     </dependency>
 
-    <!-- Appium Java Client -->
+    <!-- Appium -->
     <dependency>
       <groupId>io.appium</groupId>
       <artifactId>java-client</artifactId>
@@ -103,6 +91,7 @@
 
   <build>
     <plugins>
+      <!-- JUnit 5 runner -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
@@ -112,17 +101,25 @@
           <forkCount>1</forkCount>
           <reuseForks>false</reuseForks>
           <parallel>none</parallel>
-          <listeners>
-            <listener>io.qameta.allure.junit5.AllureJunit5</listener>
-          </listeners>
+          <useModulePath>false</useModulePath>
+          <dependenciesToScan>
+            <dependency>io.qameta.allure</dependency>
+          </dependenciesToScan>
+          <properties>
+            <configurationParameters>
+              junit.jupiter.extensions.autodetection.enabled=true
+            </configurationParameters>
+          </properties>
+          <systemPropertyVariables>
+            <allure.results.directory>${project.build.directory}/allure-results</allure.results.directory>
+          </systemPropertyVariables>
         </configuration>
       </plugin>
-
-      <!-- Allure Maven Plugin -->
+      <!-- Allure report generation -->
       <plugin>
         <groupId>io.qameta.allure</groupId>
         <artifactId>allure-maven</artifactId>
-        <version>2.11.2</version>
+        <version>2.12.0</version>
         <executions>
           <execution>
             <goals>

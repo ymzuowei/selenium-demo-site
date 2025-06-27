@@ -4,10 +4,8 @@ import com.demo.drivers.BrowserType;
 import com.demo.drivers.DriverFactory;
 import com.demo.util.ScreenshotUtil;
 import io.qameta.allure.Step;
-import io.qameta.allure.junit5.AllureJunit5;
 
 import org.junit.jupiter.api.*;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
@@ -15,7 +13,6 @@ import java.lang.reflect.Method;
 import java.time.Duration;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@ExtendWith(AllureJunit5.class)
 public abstract class BaseWebTest {
 
     protected WebDriver driver;
