@@ -51,8 +51,6 @@ public class DashboardTests extends BaseWebTest {
     public void testCardExpandCollapse() {
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.className("card")));
 
-        dummyStep();
-
         WebElement card1Header = driver.findElement(By.cssSelector("#card1 .card-header"));
         WebElement card1Content = driver.findElement(By.cssSelector("#card1 .card-content"));
         WebElement arrow = card1Header.findElement(By.className("arrow"));
@@ -134,18 +132,5 @@ public class DashboardTests extends BaseWebTest {
 
         assertTrue(driver.getCurrentUrl().contains("login.html"),
                 "Accessing dashboard without login should redirect to login page");
-    }
-
-    @Test
-    @Story("Smoke")
-    @Severity(SeverityLevel.NORMAL)
-    @Description("Dummy check")
-    public void dummyTest() {
-        assertTrue(true);
-    }
-
-    @Step("Manually invoked Allure step for verification")
-    private void dummyStep() {
-        System.out.println("Inside dummy step");
     }
 }
