@@ -111,9 +111,9 @@ Open the URL shown in the terminal (usually `http://127.0.0.1:<port>/`) to view 
 * The report is deployed to GitHub Pages via [`peaceiris/actions-gh-pages`](https://github.com/peaceiris/actions-gh-pages).
 
 🧾 **Latest Report:**  
-➡️ https://ymzuowei.github.io/selenium-demo-site/
+➡️ https://<your-github-username>.github.io/selenium-demo-site/
 
-> (Replace with your own GitHub Pages URL if forked.)
+> (Replace with your own GitHub Pages URL if forked. eg. https://ymzuowei.github.io/selenium-demo-site/)
 
 ### Cleaning old reports
 
